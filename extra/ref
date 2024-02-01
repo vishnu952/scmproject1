@@ -1,0 +1,13 @@
+ship_no/shipment number
+route/route details
+device/select device
+po_no/po number
+ndc_no/ndc number
+serial_no/serial number
+con_no/container number
+good_type/good stype
+ex_date/expected date
+del_no/delivery number
+batch_id/batch id
+desc/description
+   

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <script src="../static/javascript/web.js"></script>
+<style>
+    .none{
+    display: none;
+}
+#im{
+    display: none;
+}
+#edit{
+    color: white;
+    
+    width: 15px;
+    height: 15px;
+    border-radius: 5px;
+    border: 1px solid green;
+    background-color: green;
+
+}
+#eddel{
+    position: relative;
+    top:14vh;
+    margin-left: 50px;
+    display: flex;
+    justify-content: center;
+}
+#del{
+    color: white;
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid red;
+    background-color: red;
+}
+</style>
+</head>
+<header>
+    <div class="menu">
+        <ul>
+            <div>
+                home
+            </div>
+            <div>
+                about
+            </div>
+            <div>
+                <li onclick="user()" on class="log">user</li>
+
+                <div id="loginblock">
+                    <div id="detai">
+                        <center id="eddel">
+                            <i class="bi-pencil-fill" onclick="takeimage()" id="edit"></i>
+                            <i class="bi-trash-fill" onclick="delpro()" id="del"></i>
+                        </center>
+                        
+                        <div id="im">
+                            <form action="/imatodb" method="post" enctype="multipart/form-data">
+                                <i class="bi-box-arrow-left" onclick="takeimage()" id="cl"></i>
+                                <center>
+                                    <label for="ima">Choose Profil:<i class="bi-image-fill"></i></label>
+                                    <input type="file" accept=".jpg, .jpeg, .png" name="imagge" id="ima" style="visibility: hidden;">
+                                    <input type="submit" value="upload">
+                                </center>
+                            </form>
+                        </div>
+                        <div id="d">
+                            <div >
+                                <center><img src="{{userdata['profil']}}" onerror="this.onerror=null; this.src='../static/images/user.jpeg'" class="uspro"></center>
+                            </div>
+                            <center><strong>Hello {{userdata['username']}}..!<i class="bi-emoji-smile-fill"></i></strong></center><br>
+                            <center><button onclick="logout()">logout</button></center>
+                        </div>
+                    </div>
+                    <div id="nodetai">
+                        <center>
+                            <h4>Hello Welcome to website..</h4>
+                        <button onclick="signin()">Login</button>
+                        <button onclick="signup()">SignUp</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            </li>
+        </ul>
+    </div>
+
+</header>
+<body>
+    {% set a=[3,4,5,5,6,[2,3,4,5,5,6]] %}
+    {% for i in a %}
+   
+    {% for b in a %}
+    {% if i==b %}
+    <p>hi{{i}}</p>
+    {% else %}
+    <p>hello{{i}}</p>
+
+    {% endif %}
+
+    {% endfor %}
+    {% endfor %}
+</body>
+<script defer>
+   
+    let a=0;
+    let stat="{{status.status}}";
+    console.log(stat%2)
+    if (stat%2==0){
+        document.getElementById("detai").style.display="none";
+        document.getElementById("nodetai").style.display="block";
+    }
+    else{
+        document.getElementById("detai").style.display="block";
+        document.getElementById("nodetai").style.display="none";
+    }
+    function user(){
+        if(a%2==0){
+            document.getElementById("loginblock").style.display="block";
+            a++;
+        }
+        else{
+            document.getElementById("loginblock").style.display="none";
+            a++;
+        }
+    
+    }
+    function logout(){
+        let clear=localStorage.clear();
+        window.location.href = "{{url_for('logout')}}"; 
+    }
+  
+    function delpro(){
+        window.location.href = 'http://127.0.0.1:8000/delpro'; 
+    }
+    var usname="{{userdata.username}}";
+    var usemail="{{userdata.email}}";
+    var token="{{token}}";
+    let setuser=localStorage.setItem("username",usname);
+    let setemail=localStorage.setItem("email",usemail);
+    // let setpwd=localStorage.setItem("token",token);
+    function takeimage(){
+        if(a%2==0){
+            document.getElementById("d").style.display="block";
+            document.getElementById("im").style.display="none";
+            document.getElementById("cl").style.display="none";
+            document.getElementById("edit").style.display="block";
+            document.getElementById("del").style.display="block";
+            
+            a++;
+        }else{
+            document.getElementById("im").style.display="block";          
+            document.getElementById("d").style.display="none";
+            document.getElementById("edit").style.display="none";
+            document.getElementById("del").style.display="none";
+            document.getElementById("cl").style.display="block";
+            a++;
+        }
+    }
+    // --------------------------------
+
+    // --------------------------------
+    </script>
+</html>

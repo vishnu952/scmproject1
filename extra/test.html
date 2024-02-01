@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Shake Animation</title>
+</head>
+<script>
+function checkPassword() {
+  var passwordInput = document.getElementById("password");
+  
+  // Replace this condition with your actual password validation logic
+  if (passwordInput.value !== "correctPassword") {
+    // Add the "shake" class to the login container
+    document.querySelector(".login-container").classList.add("shake");
+    
+    // Vibrate for 200 milliseconds (adjust the duration as needed)
+    if (navigator.vibrate) {
+      navigator.vibrate(200);
+    }
+
+    // Remove the "shake" class after the animation ends
+    setTimeout(function() {
+      document.querySelector(".login-container").classList.remove("shake");
+    }, 500);
+  } else {
+    // Password is correct, you can proceed with your login logic here
+    alert("Login successful!");
+  }
+}
+
+</script>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container {
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.shake {
+  animation: shake 0.15s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+</style>
+<body>
+  <div class="login-container">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="checkPassword()">Submit</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+     $(document).ready(function () {
+            $("#myForm").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/updatepwdcon',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        let errmsg=document.getElementById('errors');
+                        let user=document.getElementById('uname');
+                        let old=document.getElementById('pwd');
+                        let newp = document.getElementById('npwd');
+                        let con=document.getElementById('cpwd');
+
+                        if (response.msg === 'same') {
+                            newp.classList.add("shake");
+                            newp.classList.add("bor");
+                            setTimeout(function() {
+                            newp.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="You are updating the same password...";
+                            // alert('You are updating the same password...');
+                        }else if (response.msg === 'newcon') {
+                            con.classList.add("shake");
+                            con.classList.add("bor");
+                            setTimeout(function() {
+                            con.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="Incorrect newpassword and conform password...";
+                            // alert('Incorrect newpassword and conform password...');
+                        }else if (response.msg === 'incor') {
+                            old.classList.add("shake");
+                            old.classList.add("bor");
+                            setTimeout(function() {
+                            old.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="Incorrect oldpassword...";
+                            // alert('Incorrect oldpassword...');
+                        }else{
+                            
+                            window.location.href = "/dashboard";
+                        }
+                        
+                    },
+                    error: function () {
+                        alert('Error submitting the form.');
+                    }
+                });
+            });
+        });
+   
+  </script>
+</body>
+</html>

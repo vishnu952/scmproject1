@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="icon" href="../static/images/user.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../static/css/dash3.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    
+
+    <script defer>
+        let a=0;
+        let token_val='{{token}}';
+        function storelocal(key,val){
+            localStorage.setItem(key,val);
+        }
+        function getlocal(key){
+            let tk=localStorage.getItem(key);
+            return tk;
+        } 
+        async function send_json(data,path,what=0){
+            const response =await fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            const receivedata=await response.json();
+            if (what==0){
+                if(receivedata['status']=="active"){
+                    userdetails(receivedata);  
+                }
+                else{
+                    window.location.href = '/signin';
+                                // changing 
+
+                }
+            }else{
+                if (what==1){
+                    userdetails(receivedata);
+                }
+                if(what==2){
+
+                }
+            }
+            
+        }
+        function subtok(){
+            var Isadmin='{{Isadmin}}';
+            var devdata=document.getElementById('device_data');
+            var devbtn=document.getElementById('devbtn');
+            if(Isadmin=="False"){
+                devbtn.remove();
+                devdata.remove();
+            }
+            if(token_val != ''){
+                storelocal("token",token_val)
+            }
+            if(getlocal("token")==null){
+                window.location.href = '/signin';
+                // changing 
+
+            }else{
+                var gettok={
+                        "toke":getlocal("token")
+                        }
+                data=send_json(gettok,'/decode',0)
+                // changing 
+
+               
+            }
+        }
+        function userdetails(datadic){
+            let usname=document.getElementById('username');
+            let demail=document.getElementById('email');
+            const profil=document.getElementById('profile');
+            let refemail=document.getElementById('refuser').value=datadic.username;
+            usname.innerText=datadic.username;
+            demail.innerText=datadic.email;
+            profil.src=datadic.profile
+            storelocal("user",datadic.username);
+        }
+        function devicedata(data=null){
+            let searchInput = document.getElementById('device_input').value;
+            const tr = document.getElementById("ttr");
+            const tds = document.querySelectorAll('.nn');
+            tds.forEach(td => {
+                let there=td.textContent
+                let targetTr = td.closest('tr');
+                if (there.includes(searchInput)) {
+                    targetTr.style.display="";
+                } else {
+                    targetTr.style.display="none";
+                }
+            });
+        }
+        function display(div_ids,but_id){
+            let divs=['dashboard','account','create_ship','my_ships','data','device_data'];
+            let buts=['dash','ac','cship','ship','data','device'];
+               for(let i=0;i<=divs.length;i++){
+                   if(divs[i]==div_ids){
+                       document.getElementById(div_ids).style.display="block";
+                       let ab=document.getElementById(but_id);
+                       ab.style.color="orangered";
+                       ab.style.backgroundColor="whitesmoke";
+                       ab.style.textShadow = '0px 2px 4px rgba(0, 0, 0, 0.5)';
+                   }
+                   else{
+                        var no=divs[i]
+                        var non=buts[i]
+                       document.getElementById(no).style.display="none";
+                       let ab=document.getElementById(non);
+                       ab.style.color="white";
+                       ab.style.backgroundColor="gray";
+                   }
+               }
+           }
+        function logout(){
+            localStorage.clear()
+            window.location.href = "{{url_for('logout')}}"; 
+        }
+        function logbtn(whi){
+            let msg = document.getElementById('logmsg');
+            let bt =document.getElementById('logbt');
+            if(whi==0){
+                msg.style.display="block";
+                bt.classList.add('hov'); 
+            }
+            if(whi==1){
+                msg.style.display="none";
+                bt.classList.remove('hov'); 
+            }
+        }
+        function getprofil(){
+                var myform=document.getElementById('imginp');
+                document.getElementById('clickfile').click();
+                const imageInput = document.getElementById('clickfile');
+                imageInput.addEventListener('change', function(event) {
+                  const selectedFile = event.target.files[0];
+                  myform.submit();
+                });
+        }
+        function removeprofil(){
+            var user={
+                "user":getlocal("user")
+                }  
+            data=send_json(user,'/delpro',1)  
+            // changing 
+            location.reload()
+        }
+        
+   </script>
+    <style>
+        .content {
+          display: none;
+        }
+        .content.active {
+          display: block;
+        }
+        .menu-container {
+          overflow-x: auto;
+          white-space: nowrap;
+          max-width: 100%; 
+        }
+        .menu-items {
+          display: inline-block;
+        }
+        .menubtn{
+            position: fixed;
+            right: 30px;
+            top: 60px;
+        }
+        .high{
+            width:100%;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            background-color:gray;
+            border: 2px solid transparent;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);        
+        }
+    
+        .high:hover {
+          border: 2px solid orangered;
+        }
+        .hov{
+            background-color: whitesmoke;
+            color: orangered;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);        
+            border: 2px solid orangered;
+        }
+        .list-group-item{
+            border-top-width: none;
+        }
+        .na{
+            width: 97%;
+            display: flex;
+            justify-content: space-evenly;
+            padding: 5px;
+            height: 60px;
+            margin-left: 33px;
+            
+        }
+        .comedown{
+            margin: auto;
+            margin-top: 55px;
+        }
+        .custom-gradient-bg {
+            border-width: 2px;
+            border-style: solid;
+            border-image:linear-gradient(to right top, orangered,orange,yellow,gray,yellow,orange,orangered) 5;
+        }
+        .blur-background {
+            backdrop-filter: blur(5px); 
+        }
+        .logmsg{
+            position: absolute;
+            width: 350px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(255, 0, 0, 0.253);
+            border-radius: 10px;
+            display: none;
+            background-color: rgba(255, 0, 0, 0.253);
+        }
+/* -------------------------------------------------- */
+        @keyframes splitTextAnimation {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .hh {
+            overflow: hidden;
+            font-family: Algerian;
+            font-size: 50px;
+            font-weight: bolder;
+            width: auto;
+            margin: auto;
+            text-align: center;
+            min-height: 9vh;
+            align-self: center;
+            color: orangered;
+            text-shadow: 2px 3px 0px gray;
+        }
+        .hh span {
+            display: inline-block;
+            transform-origin: 50% 100%;
+            animation: splitTextAnimation 0.8s ease-out forwards;
+        }
+        .hh span:nth-child(1) {
+            animation-delay: 0.1s;
+        }.hh span:nth-child(2) {
+            animation-delay: 0.2s;
+        }.hh span:nth-child(3) {
+            animation-delay: 0.3s;
+        }.hh span:nth-child(5) {
+            animation-delay: 0.1s;
+        }.hh span:nth-child(6) {
+            animation-delay: 0.2s;
+        }.hh span:nth-child(7) {
+            animation-delay: 0.3s;
+        }.hh span:nth-child(8) {
+            animation-delay: 0.1s;
+        }.hh span:nth-child(9) {
+            animation-delay: 0.2s;
+        }.hh span:nth-child(10) {
+            animation-delay: 0.3s;
+        }
+        /* ------------------------------------------- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0.5;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .animated-paragraph {
+            animation: fadeIn 2s ease-in; 
+        }
+        /* -------------------------------------- */
+        .icon-container {
+            position: absolute;
+            bottom: 0;
+            left: 0; 
+            animation: moveIcon 3s ease-in-out forwards;
+        }
+        @keyframes moveIcon {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(90vw, -90vh);
+            }
+        }
+        .icon {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 20px;
+            position: relative;
+            animation: fadeIn 2s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            35%{
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            80%{
+                opacity: 1;
+            }
+            100%{
+                opacity: 0;
+            }
+        }
+        /* ------------------------------------------------------- */
+        .cont{
+            /* width: 100%;
+            height: 92vh;
+            border: 2px solid; */
+            position: fixed;
+            bottom: 5px;
+            right: 10%;
+        }
+        .dateTimeDisplay{
+
+        }
+    </style>
+    
+</head>
+<header style="height: 70px; margin: auto;" class="fixed-top">
+   <div class="panel">
+        <h1 class="hh"> 
+            <span>S</span>
+            <span>C</span>
+            <span>M</span>
+            <span>-</span>
+            <span>E</span>
+            <span>X</span>
+            <span>P</span>
+            <span>E</span>
+            <span>R</span>
+            <span>T</span>
+        </h1>
+    </div>
+   
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent w-100 mx-auto" style="margin-top: -18px;">
+        <div class="container border-0 w-100 mx-auto">
+            
+            <div class="collapse navbar-collapse border-0 w-100 mx-auto" id="collapsibleNavId">
+                <ul class="navbar-nav na" id="addtomobmen">
+                    
+                    <li class="menu-item high nav-item hov" data-target="dashboard">Dashboard</li>
+                    <li class="menu-item high nav-item" data-target="account"><i class="bi-person-fill"></i> &nbsp;My Account</li>
+                    <li class="menu-item high nav-item" data-target="create_ship"><i class="bi-plus-circle"></i> &nbsp;Create Shipment</li>
+                    <li class="menu-item high nav-item" data-target="my_ships">My Shipments</li>
+                    <li class="menu-item high nav-item" data-target="device_data" id="devbtn">Device Data</li>
+                    <li class="high" id="logbt" onclick="logbtn(0)"><i class="bi-box-arrow-right"></i> &nbsp;logout</li>
+                
+                </ul>
+            </div>
+            
+        </div>
+        <div class=" position-relative top-0" style="width: fit-content;">
+            <div class="position-relative top-0 py-3 px-3" >
+            <div class="menubtn" >
+                <button
+                class="navbar-toggler hidden-lg-up bg-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavId"
+                aria-controls="collapsibleNavId"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="color:white;"
+                id="mebt"
+                onclick="menuclick()"
+                ><i class="bi-list"></i></button>
+            </div>  
+        </div>
+        </div>
+    </nav>
+
+</header>
+
+<body onload="subtok()">
+    <main>
+    <div class="container mt-5 ">
+        <div class="row ">
+        <div class="col-md-9 w-100 mx-auto p-4 d-block justify-content-center">
+            <div id="dashboard" class="content active ">
+                <center><img src="../static/images/scm.jpeg" alt="scm" width="500px" height="300px" class="img-fluid" ></center>
+            <center> <p class="animated-paragraph">Supply chain management (SCM) is the process of managing the flow of goods and services to and from a business, including every 
+                step involved in turning raw materials and components into final products and getting them to the ultimate customer. Effective
+                SCM can help streamline a company's activities to eliminate waste, maximize customer value, and gain a competitive advantage in the marketplace.</br>
+                Supply chain management (SCM) is the centralized management of the flow of goods and services to and from a company and includes all of the processes involved in transforming raw materials and components into final products.
+                By managing the supply chain, companies can cut excess costs and deliver products to the consumer faster and more efficiently.</br>
+                <img src="../static/images/datast.png" alt=" data stream" width="500px" height="250px" class="img-fluid"><br>
+                Some real-life examples of streaming data include use cases in every industry, including real-time stock trades, up-to-the-minute retail inventory management, social media feeds, multiplayer games, and ride-sharing apps</br>
+                Streaming data is data that is continuously generated by different sources. Such data should be processed incrementally using stream processing techniques without having access to all of the data. In addition, it should 
+                be considered that concept drift may happen in the data which means that the properties of the stream may change over time.
+                It is usually used in the context of big data in which it is generated by many different sources at high speed.
+                Data streaming can also be explained as a technology used to deliver content to devices over the internet, and it allows users to access the content immediately,
+                rather than having to wait for it to be downloaded. Big data is forcing many organizations to focus on storage costs, which brings interest to data lakes and data streams.</p></center>
+            </div>
+            <div id="account" class="content">
+                <div id="userdetail" class="container">
+                    <div class="card mx-auto shadow-lg" style="max-width: 21rem;">
+                        <img id="profile" alt="" class="img-fluid rounded-4 mx-auto mt-2" width="250px" height="350px">
+                        <div class="d-flex justify-content-end mx-3">
+                            <i class="bi-pencil-square fs-5" onclick="getprofil()"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <i class="bi-trash-fill fs-5" onclick="removeprofil()"></i>
+                        </div>
+                        <div class="card-body">
+                            <u>User Name:</u>
+                            <h5 class="h5-responsive" id="username"></h5><br>
+                            <u>Email:</u>
+                            <h5 class="h5-responsive" id="email"></h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="changeimg" >
+                    <form action="/imatodb" method="post" id="imginp" enctype="multipart/form-data">  
+                        <input type="file" name="profile" id="clickfile">
+                        <input type="text" name="user" id="refuser" style="display: none;">
+                    </form>
+                </div>
+            </div>
+            <div id="create_ship" class="content custom-gradient-bg">
+                <center>
+                    <div class="container-fluid">
+                        <h3><u>Create New Shipment</u></h3><br>
+                    </div>
+                </center>
+                <form action="/shipdetails" method="post" id="creshipmentform" >
+                    <fieldset>
+                        <div class="container d-flex justify-content-around flex-lg-nowrap flex-md-nowrap flex-wrap">
+                            <div class="container form-control bg-transparent custom-gradient-bg">
+                                    <div class="mb-3">
+                                        <label for="s_no" class="form-label">Shipment Number*</label>
+                                        <input type="text" id="s_no" class="form-control" name="ship_no" placeholder="Shipment Number" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="disabledSelect" class="form-label">Route Details*</label>
+                                        <select id="disabledSelect" class="form-select" name="route" required>
+                                            <option disabled selected>Select Route details</option>
+                                            <option>option1</option>
+                                            <option>option2</option>
+                                            <option>option3</option>
+                                            <option>option4</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="disabledSelect" class="form-label">Select device *</label>
+                                        <select id="disabledSelect" class="form-select" name="device" required>
+                                            <option disabled selected>select devices</option>
+                                            <option>device1</option>
+                                            <option>device2</option>
+                                            <option>device3</option>
+                                            <option>device4</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="s_no" class="form-label">PO Number*</label>
+                                        <input type="text" id="po_no" class="form-control" placeholder="PO Number" name="po_no" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="s_no" class="form-label">NDC Number*</label>
+                                        <input type="text" id="ndc_no" class="form-control" placeholder="NDC Number" name="ndc_no" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="s_no" class="form-label">Serial number of goods*</label>
+                                        <input type="text" id="goods_no" class="form-control" placeholder="Serial number of goods" name="serial_no" required>
+                                    </div>
+                            </div>
+                            <div class="container form-control bg-transparent custom-gradient-bg">
+                            
+                                    <div class="mb-3">
+                                        <label for="con_no" class="form-label">Container Number*</label>
+                                        <input type="text" id="con_no" class="form-control" placeholder="Container Number" name="con_no" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="goods_type" class="form-label">Goods Type*</label>
+                                        <select id="goods_type" class="form-select" placeholder="Select Goods" name="good_type" required>
+                                            <option disabled selected>select goods type</option>
+                                            <option>type1</option>
+                                            <option>type2</option>
+                                            <option>type3</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="date" class="form-label">Expected Delivery Date*</label>
+                                        <input type="date" id="date" class="form-control" placeholder="Expected Delivery Date" name="ex_date" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="del_no" class="form-label">Delivery Number*</label>
+                                        <input type="text" id="del_no" class="form-control" placeholder="Delivery Number" name="del_no" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="batch" class="form-label">Batch id*</label>
+                                        <input type="text" id="batch" class="form-control" placeholder="Batch id" name="batch_id" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dec" class="form-label">Shipment Description</label>
+                                        <textarea class="form-control" id="dec" rows="2" placeholder="Shipment Description" name="desc" required></textarea>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-around" id="subcle">
+                            <button class="btn btn-primary" >Create shipment</button>
+                            <button class="btn btn-danger" type="reset">clear details</button>  
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="my_ships" class="content">
+                <center>
+                    <div class="container-fluid">
+                        <h3><u>My Shipment</u></h3><br>
+                    </div>
+                </center>
+            <div class="container">
+                <div class="table-responsive">
+                <table
+                    class="table table-striped table-hover table-borderless table-primary align-middle"
+                >
+                    <thead class="table-light border border-2">
+                        <tr>
+                            <th>Shipment Number</th>
+                            <th>Route details</th>
+                            <th>Device</th>
+                            <th>Po no</th>
+                            <th>NDC no</th>
+                            <th>serial no</th>
+                            <th>container.no</th>
+                            <th>goods type</th>
+                            <th>expected date</th>
+                            <th>delivery no</th>
+                            <th>batch id</th>
+                            <th>description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for i in dis %}
+                        <tr class="table-primary">
+                            <td>{{i['ship_no']}}</td>
+                            <td>{{i['route']}}</td>
+                            <td>{{i['device']}}</td>
+                            <td>{{i['po_no']}}</td>
+                            <td>{{i['ndc_no']}}</td>
+                            <td>{{i['serial_no']}}</td>
+                            <td>{{i['con_no']}}</td>
+                            <td>{{i['goods_type']}}</td>
+                            <td>{{i['ex_date']}}</td>
+                            <td>{{i['del_no']}}</td>
+                            <td>{{i['batch_id']}}</td>
+                            <td>{{i['desc']}}</td>
+                        </tr>
+                        {% endfor %}
+        
+                    </tbody>
+                    <tfoot>
+                        
+                    </tfoot>
+                </table>
+        
+                </div>
+                
+        
+            </div>
+            </div>
+            
+            <div id="device_data" class="content">
+                <script>
+                    
+                </script>
+                <div class="container-fluid d-flex justify-content-between">
+                    <div class=" d-lg-block d-md-none d-sm-none w-auto">
+
+                    </div>
+                    <div class="" style="z-index: 1;" style="width: fit-content;">
+                        <h1 class="flex-nowrap" >Device&nbsp;Data</h1>
+                    </div>
+                    <div class="row-cols-auto mt-2">
+                        <input type="text" id="device_input" width="auto" placeholder="search here..." class="rounded-1 border border-success" style="flex-shrink: 50;" oninput="devicedata()">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    
+                    <table
+                        class="table table-primary"
+                    >
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">S.no</th>
+                                <th scope="col">Device_ID</th>
+                                <th scope="col">Battery_Level</th>
+                                <th scope="col">Sensor_temp</th>
+                                <th scope="col">Route_From</th>
+                                <th scope="col">Route_To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key,value in devdata.items() %}
+                            <tr class="" id="ttr">
+                                <td scope="row">{{key}}</td>
+                                <td class="nn">{{value['Device_ID']}}</td>
+                                <td>{{value['Battery_Level']}}</td>
+                                <td>{{value['First_Sensor_temperature']}}</td>
+                                <td>{{value['Route_From']}}</td>
+                                <td>{{value['Route_To']}}</td>
+                            </tr>
+                            
+                            {% endfor %}
+                           
+                        </tbody>
+                    </table> 
+                </div>
+                
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div class="logmsg blur-background" id="logmsg">
+        <br><br>
+        <div>
+            <center><h2 class="fw-bolder">Do you want to logout....<i class="bi-emoji-smile-fill"></i></h2></center>
+        </div><br><br>
+        <div class="d-flex justify-content-around">
+            <button class="btn btn-danger fw-bolder" onclick="logout()">Yes</button>
+            <button class="btn btn-success fw-bolder" onclick="logbtn(1)">No</button>
+        </div>
+    </div>
+    <div class="cont">
+        <h6 id="dateTimeDisplay"></h6>
+    </div>
+
+    </main>
+</body>
+<script>
+    var h=document.getElementById('dateTimeDisplay');
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    var month = currentDate.getMonth() + 1; 
+    var year = currentDate.getFullYear();
+    var hours = currentDate.getHours();
+    var minutes = currentDate.getMinutes();
+    var seconds = currentDate.getSeconds();
+    h.textContent =day + "-" + month + "-" + year;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const menuItems = document.querySelectorAll('.menu-item');
+    let clickbt=0
+    function menuclick(){
+        clickbt=1
+        var men=document.getElementById('addtomobmen');
+        men.classList.add('comedown');
+    }
+// search function
+
+// end for search function
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const targetId = item.getAttribute('data-target');
+        const targetContent = document.getElementById(targetId);
+        document.querySelectorAll('.content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.querySelectorAll('.menu-item').forEach(menuItem => {
+            if (menuItem !== item) {
+                menuItem.classList.remove('hov'); 
+            }
+        });
+        targetContent.classList.add('active'); 
+        item.classList.add('hov');
+        const menuButton = document.getElementById('mebt');
+    
+        if(clickbt==1){   
+            menuButton.click();
+            const men=document.getElementById('addtomobmen');
+            men.classList.remove('comedown');
+            clickbt=0
+        }
+      });
+      
+    });
+</script>
+</html>
+
+
+

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="../static/javascript/web2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- <script>
+            $(document).ready(function () {
+            $("#myForm").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/signuptodb',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        let errmsg=document.getElementById('errors');
+                        let user=document.getElementById('uname');
+                        let email=document.getElementById('email');
+                        let con=document.getElementById('cpwd');
+                        let capc = document.getElementById('Captcha');
+
+                        if (response.msg == 'retype') {
+                            capc.classList.add("shake");
+                            capc.classList.add("bor");
+                            setTimeout(function() {
+                                capc.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="Retype the captcha...";
+                        }
+                        else if (response.msg == 'pwd') {
+                            con.classList.add("shake");
+                            con.classList.add("bor");
+                            setTimeout(function() {
+                            con.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="Incorrect newpassword and conform password...";
+                        }
+                        else if (response.msg == 'email') {
+                            email.classList.add("shake");
+                            email.classList.add("bor");
+                            setTimeout(function() {
+                                email.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="Email is already used ...";
+                        }
+                        else if(response.msg == "user"){
+                            user.classList.add("shake");
+                            user.classList.add("bor");
+                            setTimeout(function() {
+                                user.classList.remove("shake");
+                            }, 500);
+                            errmsg.innerText="User already exists, Try for signin...";
+                        
+                        }
+                      
+                    },
+                    error: function () {
+                        alert("Error on submiting form")
+                    }
+                });
+            });
+        });
+        function clears(){
+            let errmsg=document.getElementById('errors');
+            let user=document.getElementById('uname');
+            let email=document.getElementById('email');
+            let con=document.getElementById('cpwd');
+            let capc = document.getElementById('Captcha');
+
+            let ids=[user,email,con,capc]
+            ids.forEach(id => {
+                id.classList.remove('bor');
+            });
+            errmsg.innerText="";
+        }
+    </script> -->
+    <style>
+  
+        #formcon{
+      
+            min-width: 350px;
+            max-width: 35%;
+            box-shadow: 2px 2px 5px 2px rgb(0, 0, 5,0.3);
+        }
+        
+        body{
+          background-image: linear-gradient(90deg, rgba(255,0,0,0), rgb(0, 183, 255));
+        }
+        #cap{
+           margin-top: -4%;
+           margin-left: -65%;
+        }
+        
+        #capcha{
+            width: 35%;
+            border: 2px solid green;
+            background-color: transparent;
+            text-align: center;
+            .no-select {
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
+            }
+        }
+        #re{
+            border: 1px solid;
+            border-radius: 2px;
+        }#notalert{
+            position: relative;
+            top: -10vh;
+            width: 350px;
+            height: fit-content;
+            padding: 15px;
+            margin: auto;
+            border: 2px dashed red;
+            background-color: brown;
+
+        }#errors{
+            color: red;
+            font-size: medium;
+        }
+        .bor{
+            border-color: red;
+        }
+        .shake {
+        animation: shake 0.15s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25%, 75% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+        }
+
+           
+    </style>
+</head>
+<body onload="recap()">
+    <!-- <div id="notalert">hhhiiii</div> -->
+    <div class="container-lg px-3 py-1 mx-auto rounded-2 border-1 mt-1" id="formcon">
+        <b><i class="bi-house-fill" onclick="index()"></i></b>
+        <center><h2><u>Sign up</u></h2>
+        <p>creating a new account.</p></center>
+        
+        <form id="myForm" action="/signuptodb" method="post">
+            <div style="height: fit-content;">
+                <center>
+                    <p id="errors"></p>
+                </center>
+            </div>
+            <div class="form-group mt-2">
+                <label for="uname" class="pt-1 fw-bold">Enter User Name:</label><br>
+                <input type="text" id="uname" name="username" placeholder="User name" class="form-control">
+            </div>
+            <div class="form-group mt-2">
+                <label for="email" class="pt-1 fw-bold">Enter Email:</label><br>
+                <input type="email" id="email" name="email" placeholder="example123@gmail.com" class="form-control">
+            </div>
+            <!-- <div class="form-group mt-2">
+                <label for="age" class="pt-1 fw-bold">Enter Age:</label><br>
+                <input type="number" id="age" name="age" placeholder="Age" class="form-control">
+            </div> -->
+            <div class="form-group mt-2">
+                <label for="pwd" class="pt-1 fw-bold">Enter Password:</label><br>
+                <input type="password" id="pwd" name="password" placeholder="Password" class="form-control">
+            </div>
+            <div class="form-group mt-2">
+                <label for="cpwd" class="pt-1 fw-bold">Enter Conform Password:</label><br>
+                <input type="password" id="cpwd" name="con_password" placeholder="Confirm password" class="form-control">
+            </div>
+            <div>
+                <br>
+                <center class="pt-1 fw-bold" id="cap" >Enter Captcha :</center>
+                <div id="aa" class="d-flex justify-content-between">
+                    <input type="text" id="Captcha" name="Captcha" value="" placeholder="Enter captcha" class="form-control w-50">
+                    <input type="text" id="capcha1" name="incap" style="display: none;" >
+                    <span class="border border-success text-success fw-bolder p-1 rounded-2" id="capcha"></span><i class="bi-arrow-repeat m-2" onclick="recap()"></i>
+               
+                </div>
+            </div>
+            <div class="form-group mt-2">                
+                <center onclick="clears()"><button type="submit" class="center btn btn-primary">Sign Up</button></center>
+                <center><p>already have a account ? <p2 onclick="signin()" class="text-primary"><b>sign in</b></p2></p></center>
+                <button type="reset" id="rebtn" style="visibility: collapse;"></button>
+            </div>
+            
+            
+        </form>
+       
+    </div>
+    <script defer>
+        function index(){
+            window.location.href = '/'; 
+            }
+        function recap(){
+            let btt=document.getElementById("rebtn").click();
+            var length = 5;
+            var word = "";
+            for (var i = 0; i < length; i++) {
+             var code = Math.floor(Math.random() * 26) + 97;
+             word += String.fromCharCode(code);
+            }
+            let cap=document.getElementById("capcha").innerText=word
+            let cap1=document.getElementById("capcha1").value=word
+        }
+        const noSelectElements = document.querySelectorAll('#capcha');
+
+        noSelectElements.forEach(element => {
+            element.addEventListener('selectstart', function (e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

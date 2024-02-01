@@ -1,0 +1,35 @@
+/* .menu ul div{ */
+    /* display: flex; */
+    /* border: 2px solid; */
+/* } */
+.menu ul {
+    display: flex;
+    justify-content: space-between;
+}
+li{
+    list-style: none;
+}
+.log{
+    float: inline-end;
+}
+#loginblock{
+    display: none;
+    width: 250px;
+    position: absolute;
+    padding-bottom: 5px;
+    top: 30px;
+    left: 75%;
+    border: 0px solid;
+    box-shadow: 5px 5px 8px 3px rgb(0, 0, 0,0.4) ;
+    border-radius: 5px;
+}
+.uspro{
+    border: 1px solid;
+    margin:10px auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+}
+.detai{
+    display: block;
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signin page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <script src="../static/javascript/web2.js"></script>
+    <script>
+    function index(){
+      window.location.href = '/'; 
+      }
+    
+      </script>
+<style>
+  
+  #formcon{
+
+    width: 350px;
+    margin-top:28vh;
+    border-radius: 10px;
+    padding-top: 30px;
+    border: 2px solid rgb(0, 0, 5,0.3);
+    box-shadow: 2px 2px 5px 2px rgb(0, 0, 5,0.3);
+  }
+  form{
+    margin-top: 30px;
+  }
+  body{
+    background-image: linear-gradient(90deg, rgba(255,0,0,0), rgb(0, 183, 255));
+  }
+  .sub{
+    background-color: rgba(6, 136, 2, 0.815);
+  }
+</style>
+</head>
+<body>
+   
+    <div class="container" id="formcon">
+      <b><i class="bi-house-fill" onclick="index()"></i></b>
+      <center><h2><u>Sign In</u></h2></center>
+        
+        <form action="{{url_for('signintodb')}}" method="post">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input id="email" type="text" class="form-control" name="username" placeholder="User Name">
+            </div><br>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+              <input id="password" type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+            <p class="text-primary" onclick="tryold()">forgot password</p>
+            <div>
+                <center><button type="submit" class="center btn btn-primary">Sign In</button></center>
+            </div>
+            <div>
+                <center><p>create a new account ? <p2 onclick="signup()" class="text-primary">sign up</p2></p></center>
+            </div>
+          </form>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

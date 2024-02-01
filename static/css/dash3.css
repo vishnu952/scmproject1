@@ -1,0 +1,153 @@
+:root{
+    --border-image:linear-gradient(to right top, orangered,orange,yellow,gray,yellow,orange,orangered) 5;
+
+}
+#dashboard,#create_ship,#my_ships,#data,#device_data{
+    width: 99%;
+    border-width: 2px;
+    border-style:solid;
+    border-radius: 5px;
+    border-image:var(--border-image);
+    margin: auto;
+    height: 75vh;
+    word-wrap: break-word;
+    padding: 10px;
+    overflow-y: scroll;
+    margin-top: 10vh;
+    position: sticky;
+
+} 
+#account{
+    width: 99%;
+    border-width: 2px;
+    border-radius: 5px;
+    border-style: solid;
+    border-image:var(--border-image);
+    margin: auto;
+    height: 75vh;
+    word-wrap: break-word;
+    padding: 10px;
+    overflow-y:hidden;
+    margin-top: 10vh;
+    position: sticky;
+}
+label{
+    font-weight: bolder;
+    font-family: Arial, Helvetica, sans-serif;
+}
+p{
+    word-wrap: break-word;
+}
+/* #ac,#cship,#ship,#data,#log,#device{
+    width: 100%;
+    border: 2px solid gray;
+    color: whitesmoke;
+    text-shadow: 2px 2px 4px black;
+} */
+/* #dash{
+    margin-left: 0px;
+    width: 100%;
+    border: 2px solid gray;
+    background-color: whitesmoke;
+    color: orangered;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+} */
+.panel{
+    font-family: Algerian;
+    font-size: 50px;
+    font-weight: bolder;
+    width: auto;
+    margin: auto;
+    text-align: center;
+    min-height: 9vh;
+    align-self: center;
+    color: orangered;
+    text-shadow: 2px 3px 0px gray;
+}
+
+.men{
+    margin: auto;
+    width:99%;
+    display: flex;
+    max-height: 10vh;
+    min-height: 10vh;
+    padding-left: 0px; 
+    cursor: pointer;
+}
+.men ul{
+    width: 100%;
+    max-height: 10vh;
+    min-height: 10vh;
+    /* border: 2px solid gray; */
+}
+.men li{
+    /* border: 2px solid white; */
+    list-style: none;
+    width: 20%;
+    max-height: 10vh;
+    min-height: 10vh;     
+    background-color: gray;
+
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: gray; 
+    border: 2px solid orangered;
+    margin-left: 2px;
+    border-radius: 20px; 
+}
+
+@media screen and (max-width: 740px) {
+   
+}
+
+/* Account */
+#userdetails{
+    display: flex;
+    justify-content: center;
+    height: 50vh;
+    width: 70%;
+    border: 2px dashed rgb(179, 4, 223);
+    margin: auto;
+    margin-top: 10vh;
+}
+#changeimg{
+    visibility: hidden;
+    height: 50vh;
+    width: 70%;
+    border: 2px dashed rgb(179, 4, 223);
+    margin: auto;
+    padding-top: 10%;
+    margin-top: 10vh;
+}
+#hom{
+    position: relative;
+    left: 10%;
+    top: -5vh;
+    
+}
+#profil img{
+    width: 200px;
+    height: 200px;
+    margin-top:29%;
+    border-radius: 130px;
+    border: 2px solid gray;
+}
+#profil i{
+    position: relative;
+    top: 39%;
+    left: -20%;
+}
+#details{
+    margin: auto 20px auto 20px;
+}
+
+/* End Account */
+/* create shipment */
+#subcle{
+left: 100px;
+}
+/* end shipment */
