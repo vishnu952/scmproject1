@@ -11,12 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
     <script src="../static/javascript/web2.js"></script>
-    <script>
-    function index(){
-      window.location.href = '/'; 
-      }
-    
-      </script>
 <style>
   
   #formcon{
@@ -31,12 +25,34 @@
   form{
     margin-top: 30px;
   }
+  #errors{
+    color: red;
+    font-size: medium;
+  }
   body{
     background-image: linear-gradient(90deg, rgba(255,0,0,0), rgb(0, 183, 255));
   }
   .sub{
     background-color: rgba(6, 136, 2, 0.815);
   }
+  .bor{
+            border-color: red;
+        }
+        .shake {
+        animation: shake 0.15s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25%, 75% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -46,13 +62,18 @@
       <center><h2><u>Sign In</u></h2></center>
         
         <form action="{{url_for('signintodb')}}" method="post">
+          <div style="height: fit-content;">
+            <center>    
+                <p id="errors"></p>
+            </center>
+          </div>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-              <input id="email" type="text" class="form-control" name="username" placeholder="User Name">
+              <input id="email" type="text" class="form-control" name="username" placeholder="User Name" required>
             </div><br>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input id="password" type="password" class="form-control" name="password" placeholder="Password">
+              <input id="" type="password" class="form-control" name="password" placeholder="Password" required>
             </div>
             <p class="text-primary" onclick="tryold()">forgot password</p>
             <div>
@@ -61,10 +82,50 @@
             <div>
                 <center><p>create a new account ? <p2 onclick="signup()" class="text-primary">sign up</p2></p></center>
             </div>
+
           </form>
     </div>
 
 </body>
+<script defer>
+   function index(){
+      window.location.href = '/'; 
+      }
+     
+        var b = '{{error.signin}}'
+        let errmsg=document.getElementById('errors');
+        let user=document.getElementById('email');
+        let pwd=document.getElementById('password');
+        
+        setTimeout(function() {
+            errmsg.innerText="";
+            var dd=[user,pwd]
+            dd.forEach(d => {
+              d.classList.remove("shake");
+              d.classList.remove("bor");
+            });
+        }, 4000);
+        if (b == "user"){
+          errmsg.innerText= "No user found, Try for signup..";
+          user.classList.add("shake");
+          user.classList.add("bor");
+        }
+        if (b == "pwd"){
+          user.value='{{user}}'
+          errmsg.innerText= "Incorrect password";
+          pwd.classList.add("shake");
+          pwd.classList.add("bor");
+        }
+ 
+</script>
+<!-- var passwordInput = document.getElementById('password');
+var showPasswordCheckbox = document.getElementById('showPassword');
+
+showPasswordCheckbox.addEventListener('change', function() {
+    passwordInput.type = this.checked ? 'text' : 'password';
+});
+<input type="checkbox" id="showPassword"> Show Password -->
+
 </html>
 
 

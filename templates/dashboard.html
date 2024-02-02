@@ -230,10 +230,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 2px solid rgba(255, 0, 0, 0.253);
+            border: 2px solid orangered;
+            color: orangered;
             border-radius: 10px;
             display: none;
-            background-color: rgba(255, 0, 0, 0.253);
+            box-shadow: -5px 5px 20px 0.5px orangered;
+            background-color: rgba(255, 255, 255, 0.548);
         }
 /* -------------------------------------------------- */
         @keyframes splitTextAnimation {
@@ -655,11 +657,11 @@
     <div class="logmsg blur-background" id="logmsg">
         <br><br>
         <div>
-            <center><h2 class="fw-bolder">Do you want to logout....<i class="bi-emoji-smile-fill"></i></h2></center>
+            <center><h2 class="fw-bolder">Do you want to logout...<i class="bi-emoji-smile-fill"></i></h2></center>
         </div><br><br>
         <div class="d-flex justify-content-around">
-            <button class="btn btn-danger fw-bolder" onclick="logout()">Yes</button>
-            <button class="btn btn-success fw-bolder" onclick="logbtn(1)">No</button>
+            <button class="btn btn-danger fw-bolder w-25" onclick="logout()">Yes</button>
+            <button class="btn btn-success fw-bolder w-25" onclick="logbtn(1)">No</button>
         </div>
     </div>
     <div class="cont">

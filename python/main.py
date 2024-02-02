@@ -36,7 +36,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 client=MongoClient(os.getenv("connectdb"))
 app.add_middleware(SessionMiddleware, secret_key = SECRET )
-
+errors={}
 # connecting database
 dblist=client.list_database_names()
 if "logdata" in dblist:
@@ -55,12 +55,14 @@ app.mount("/static",StaticFiles(directory="static"),name="static")
 # the below code load a landing web page
 @app.get("/",response_class=HTMLResponse)
 async def index(request:Request):
-    return template.TemplateResponse("signup.html",{"request":request})
+    errors["signup"]=" "
+    return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":None})
 
 # the below code load a signup web page
 @app.get("/signup",response_class=HTMLResponse)
 async def signuppage(request:Request):
-    return template.TemplateResponse("signup.html",{"request":request})
+    errors["signup"]=" "
+    return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":None})
 
 # the below code get data from signup page and verify data before inserting to database
 @app.post("/signuptodb") #--
@@ -75,7 +77,11 @@ async def signuptodb(request:Request,username:str = Form() ,email:str=Form(), pa
         "status":"active"
     }
     ckcap=incap
-    
+    d={
+        "user":username,
+        "email":email,
+        "pwd":password
+    }
     alreadyin=col.find_one({"username":username})
     if alreadyin==None:
         alemail=col.find_one({"email":email})
@@ -85,18 +91,23 @@ async def signuptodb(request:Request,username:str = Form() ,email:str=Form(), pa
                     col.insert_one(userdata)
                     return signin_fun(username,request)
                 else:
-                    return{"msg":"retype"}
+                    errors['signup']="cap"
+                    return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":d})
             else:
-                return{"msg":"pwd"}
+                errors['signup']="pwd"
+                return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":d})
         else:
-            return{"msg":"email"}
+            errors['signup']="email"
+            return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":d})
     else:
-        return{"msg":"user"}
+        errors['signup']="user"
+        return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":d})
     
 # the below code load a signin web page when signin endpoint get in url 
 @app.get("/signin",response_class=HTMLResponse)
 async def signinpage(request:Request):
-    return template.TemplateResponse("signin.html",{"request":request})
+    errors['signin']=" "
+    return template.TemplateResponse("signin.html",{"request":request,"error":errors})
 
 # the below code load a signintodb web page when signintodb endpoint get in url 
 # the below code verify the user in database or not if user found and with correct password 
@@ -107,16 +118,17 @@ def signintodb(request:Request,username:str=Form(),password:str=Form()):
     user={"username":username}
     dbuser=col.find_one(user)
     if dbuser==None:
-        return {"there is no user with"+username}
-    is_correct = pwd_context.verify(password, dbuser["password"])
-    if dbuser==None:
-        return {"there is no user with "+username}
+        errors['signin']="user"
+        return template.TemplateResponse("signin.html",{"request":request,"error":errors})
     else:
+        is_correct = pwd_context.verify(password, dbuser["password"])
         if is_correct:
             col.update_one({"username":username},{"$set":{"status":"active"}})
             return signin_fun(username,request)
         else:
-            return{"Message":"wrong password"}
+            errors['signin']="pwd"
+            return template.TemplateResponse("signin.html",{"request":request,"error":errors,"user":username})
+
 
 # the below code load the forgetpwd.html  when forgetpwd endpoint get in url 
 @app.get("/forgetpwd",response_class=HTMLResponse)
@@ -206,7 +218,8 @@ async def decode(request:Request,getted_token:dict):
 async def logout(request:Request): 
     user = request.session.get('user')
     col.update_one({"username":user},{"$set":{"status":"inactive"}})
-    return template.TemplateResponse("signin.html",{"request":request})
+    errors['signin']=" "
+    return template.TemplateResponse("signin.html",{"request":request,"error":errors})
 
 @app.get("/logstatus")
 async def logstat(request:Request):
