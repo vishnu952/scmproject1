@@ -159,15 +159,18 @@ async def updatepwdcon(request:Request,username:str=Form(),old_password:str=Form
 # the below code load a otp.html web page when passwordotp endpoint get in url 
 @app.get("/passwordotp",response_class=HTMLResponse)
 async def passwordotp(request:Request):
-    return template.TemplateResponse("otp.html",{"request":request})
+    errors['otp']=" "
+    return template.TemplateResponse("otp.html",{"request":request,"email":" ","error":errors})
 
 @app.post("/otp",response_class=HTMLResponse)
 async def forgot_password(request: Request,email: str= Form()):
     user = col.find_one({"email": email})
-    global otemail
+    # global otemail
     otemail=email
     if not user:
-        raise HTTPException(status_code=400, detail="User not found")
+        errors['otp']="nouser"
+        return template.TemplateResponse("otp.html",{"request":request,"email":otemail,"error":errors})
+        # raise HTTPException(status_code=400, detail="User not found")
     
     otp = ''.join(random.choices(string.digits, k=6))
     user["otp"] = otp
@@ -179,28 +182,32 @@ async def forgot_password(request: Request,email: str= Form()):
     message = 'Subject: {}\n\n{}'.format('OTP for password reset', 'Your OTP is: ' + otp)
     server.sendmail(senderemail, user["email"], message)
     server.quit()
-    
-    return template.TemplateResponse("otp.html",{"request":request,"email":otemail})
+    errors['otp']="success"
+    return template.TemplateResponse("otp.html",{"request":request,"email":otemail,"error":errors})
+        
 # ***
-@app.post("/checkotp",response_class=HTMLResponse)
-async def checkotp(request:Request,otp:str=Form(),newpwd:str=Form(),conpwd:str=Form()):
-    email=otemail
-    olddata={"email":email}
-    ckotp = col.find_one({"email":email})
-    new_hashed_password = pwd_context.hash(newpwd)
-    newdata={ "$set": {"email":email,"password":new_hashed_password}}
+@app.post("/checkotp")
+async def checkotp(request:Request,emaill:str=Form(),otp:str=Form(),newpwd:str=Form(),conpwd:str=Form()):
+    olddata={"email":emaill}
+    ckotp = col.find_one(olddata)
     if ckotp["otp"]==otp:
-    
         if newpwd==conpwd:
+            new_hashed_password = pwd_context.hash(newpwd)
+            newdata={ "$set": {"email":emaill,"password":new_hashed_password}}
             updata=col.update_one(olddata,newdata)
-            usr=col.find_one({"email":email})
-            username=usr["username"]
-            return RedirectResponse(url=f"/dashboard", status_code=307)
+            usr=col.find_one({"email":emaill})
+            request.session['user'] = usr["username"]
+            # return RedirectResponse(url=f"/dashboard", status_code=307)
+            errors['otp']="success2"
+            return template.TemplateResponse("otp.html",{"request":request,"email":emaill,"error":errors})
+
             # return signin_fun(username,request)
         else:
-            return {"msg":"check the password"} 
+            errors['otp']="pwd"
+            return template.TemplateResponse("otp.html",{"request":request,"email":emaill,"error":errors})
     else:
-        return{"msg":"Incorrect otp "}
+        errors['otp']="otp"
+        return template.TemplateResponse("otp.html",{"request":request,"email":emaill,"error":errors})
 
 @app.post("/decode")
 async def decode(request:Request,getted_token:dict):
@@ -239,12 +246,12 @@ async def imatodb(request: Request, profile: UploadFile = File(), user: str = Fo
             with open(path, "wb") as f:
                 shutil.copyfileobj(profile.file, f)
             col.update_one({"username": user}, {"$set": {"profile": path}})
+        request.session['user'] = user
         return RedirectResponse(url=f"/dashboard", status_code=307)
 
 @app.post("/dashboard")
 async def da(request:Request):
     user = request.session.get('user')
-    # user = request.query_params.get("user")
     if not user:
         return {"message": "User parameter not found in query params"}
     return signin_fun(user, request)

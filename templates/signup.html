@@ -85,7 +85,7 @@
         <center><h2><u>Sign up</u></h2>
         <p>creating a new account.</p></center>
         
-        <form id="myForm" action="/signuptodb" method="post">
+        <form id="myForm" action="/signuptodb" method="post" class="was-validated">
             <div style="height: fit-content;">
                 <center>    
                     <p id="errors"></p>
@@ -105,7 +105,7 @@
             </div> -->
             <div class="form-group mt-2">
                 <label for="pwd" class="pt-1 fw-bold">Enter Password:</label><br>
-                <input type="password" id="pwd" name="password" placeholder="Password" class="form-control" required>
+                <input type="password" id="pwd" name="password" pattern=".{8,}" title="Please enter minimum of 8 characters" placeholder="Password" class="form-control" required>
             </div>
             <div class="form-group mt-2">
                 <label for="cpwd" class="pt-1 fw-bold">Enter Conform Password:</label><br>

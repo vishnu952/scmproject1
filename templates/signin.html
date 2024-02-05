@@ -25,33 +25,34 @@
   form{
     margin-top: 30px;
   }
-  #errors{
-    color: red;
-    font-size: medium;
-  }
+
   body{
     background-image: linear-gradient(90deg, rgba(255,0,0,0), rgb(0, 183, 255));
   }
   .sub{
     background-color: rgba(6, 136, 2, 0.815);
   }
+  #errors{
+    color: red;
+    font-size: medium;
+  }
   .bor{
-            border-color: red;
-        }
-        .shake {
-        animation: shake 0.15s ease-in-out;
-        }
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            25%, 75% {
-                transform: translateX(-10px);
-            }
-            50% {
-                transform: translateX(10px);
-            }
-        }
+      border-color: red;
+  }
+  .shake {
+  animation: shake 0.15s ease-in-out;
+  }
+  @keyframes shake {
+      0%, 100% {
+          transform: translateX(0);
+      }
+      25%, 75% {
+          transform: translateX(-10px);
+      }
+      50% {
+          transform: translateX(10px);
+      }
+  }
 
 </style>
 </head>
@@ -73,7 +74,7 @@
             </div><br>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input id="" type="password" class="form-control" name="password" placeholder="Password" required>
+              <input id="" type="password" class="form-control"  name="password" placeholder="Password" required>
             </div>
             <p class="text-primary" onclick="tryold()">forgot password</p>
             <div>

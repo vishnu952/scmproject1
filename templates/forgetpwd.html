@@ -119,7 +119,7 @@
 
 
         <center><h2>Change password</h2></center><br>
-        <form id="myForm" action="/updatepwdcon" method="post">
+        <form id="myForm" action="/updatepwdcon" method="post" class="was-validated">
             <div>
                 <center>
                     <p id="errors"></p>
@@ -135,7 +135,7 @@
             </div>
             <div>
                 <label for="npwd" class="pt-3 fw-bold">new Password:</label>
-                <input type="password" id="npwd" name="new_password" class="form-control" required>
+                <input type="password" id="npwd" pattern=".{8,}" title="Please enter minimum of 8 characters" name="new_password" class="form-control" required>
             </div>
             <div>
                 <label for="cpwd" class="pt-3 fw-bold">Conform Password:</label>

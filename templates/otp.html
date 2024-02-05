@@ -44,33 +44,123 @@
         top:-38px;
         z-index: 1;
     }
+    #errors{
+        color: red;
+        font-size: medium;
+    }
+    .bor{
+        border-color: red;
+    }
+    .shake {
+    animation: shake 0.15s ease-in-out;
+    }
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        25%, 75% {
+            transform: translateX(-10px);
+        }
+        50% {
+            transform: translateX(10px);
+        }
+    }
 </style>
 </head>
 <body>
     <div class="container-lg p-4 mx-auto rounded-2 border-1 mt-5 " id="cont">
         <b><i class="bi-box-arrow-left" onclick="signin()"></i></b>    
         <h3><center>Change password</center></h3><br>
-        <form action="/otp" method="post">
+        <div>
+            <center>
+                <p id="errors"></p>
+            </center>
+        </div>
+        <form action="/otp" method="post" class="was-validated">
             <div>
                 <label for="email" class="pt-1 fw-bold"> Enter Email:</label><br>
                 <input type="email" id="email" name="email" required value="{{email}}" class="form-control" placeholder="example@gmail.com"><br>
                 <label for="otp" class="fw-bold">Enter OTP: </label>
             </div>
-            <input type="submit" value="Get OTP" class="gotp">
+            <input type="submit" id="otpbtn" value="Get OTP" class="gotp">
         </form>
-        <form action="/checkotp" method="post" class="pwdfo">
-            
-            <input type="text" id="otp" name="otp" required placeholder="OTP" class="form-control"><br>
+        <form action="/checkotp" method="post" class="pwdfo was-validated" >
+            <input type="email" id="email2" name="emaill" value="" class="form-control" style="display: none;">
+
+            <input type="text" id="otp" pattern=".{6,}" title="Please enter 6 digit code" name="otp" required placeholder="OTP" class="form-control" required><br>
             <div>
                 <label for="new" class="pt-1 fw-bold">Enter New password:</label><br>    
-                <input type="text" id="new" name="newpwd" placeholder="Password" class="form-control"><br>
+                <input type="password" id="new" name="newpwd" pattern=".{8,}" title="Please enter minimum of 8 characters" placeholder="Password" class="form-control" required><br>
             </div>
             <div>  
                 <label for="old" class="pt-1 fw-bold">Enter Confirm password:</label><br>    
-                <input type="text" id="new" name="conpwd" placeholder="Confirm Password" class="form-control"><br>
+                <input type="password" id="cnew" name="conpwd" placeholder="Confirm Password" class="form-control" required><br>
             </div>
-            <center><button type="submit" class="center btn btn-primary rounded-1">Update password </button></center><br>
+
+            <center><button type="submit" id="subbtn" class="center btn btn-primary rounded-1">Update password </button></center><br>
         </form>
     </div>
 </body>
+<script>
+    e='{{email}}'
+    msg='{{error.otp}}'
+    email=document.getElementById('email');
+    email2=document.getElementById('email2');
+    otp=document.getElementById('otp');
+    cpwd=document.getElementById('cnew');
+    errmsg=document.getElementById('errors');
+    subbtn=document.getElementById('subbtn');
+    otpbtn=document.getElementById('otpbtn');
+    if(e){
+        email.value=e;
+        email2.value=e;
+    }
+    subbtn.disabled = true;
+    email2.value=email.value;
+    setTimeout(function() {
+        errmsg.innerText="";
+        var dd=[otp,email,cpwd]
+        dd.forEach(d => {
+            d.classList.remove("shake");
+            d.classList.remove("bor");
+        });
+    }, 4000);
+    setTimeout(function() {
+        otpbtn.disabled = false;
+    }, 45000);
+    if(msg == "success"){
+        errmsg.style.color="green";
+        errmsg.innerText="OTP sent successfully"
+        subbtn.disabled = false;
+        otpbtn.disabled = true;
+        otpbtn.title="Resend otp after 45 sec."
+    }
+    if(msg == "success2"){
+        errmsg.style.color="green";
+        errmsg.innerText= "Password updated successfully try to signin..";
+        window.location.href="/signin";
+
+    }   
+    if(msg == "nouser"){
+        email.classList.add("shake");
+        email.classList.add("bor");
+        errmsg.innerText= "No user found, Try for signup..";
+
+    }   
+    if(msg == "pwd"){
+        cpwd.classList.add("shake");
+        cpwd.classList.add("bor");
+        errmsg.innerText= "Incorrect password and conform password";
+
+    }    
+    if(msg == "otp"){
+        otp.classList.add("shake");
+        otp.classList.add("bor");
+        errmsg.innerText= "Incorrect OTP..";
+
+    }
+
+    
+
+</script>
 </html>
