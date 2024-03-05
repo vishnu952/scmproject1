@@ -3,66 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgetpassword</title>
+    <title>Change password</title>
+    <link rel="icon" href="../static/images/icon.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="../static/javascript/web2.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-             $(document).ready(function () {
-            $("#myForm").submit(function (event) {
-                event.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/updatepwdcon',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        let errmsg=document.getElementById('errors');
-                        let user=document.getElementById('uname');
-                        let old=document.getElementById('pwd');
-                        let newp = document.getElementById('npwd');
-                        let con=document.getElementById('cpwd');
 
-                        if (response.msg === 'same') {
-                            newp.classList.add("shake");
-                            newp.classList.add("bor");
-                            setTimeout(function() {
-                            newp.classList.remove("shake");
-                            }, 500);
-                            errmsg.innerText="You are updating the same password...";
-                        }else if (response.msg === 'newcon') {
-                            con.classList.add("shake");
-                            con.classList.add("bor");
-                            setTimeout(function() {
-                            con.classList.remove("shake");
-                            }, 500);
-                            errmsg.innerText="Incorrect newpassword and conform password...";
-                        }else if (response.msg === 'incor') {
-                            old.classList.add("shake");
-                            old.classList.add("bor");
-                            setTimeout(function() {
-                            old.classList.remove("shake");
-                            }, 500);
-                            errmsg.innerText="Incorrect oldpassword...";
-                        }else if(response.msg == "success"){
-                            window.location.href="/signin";
-                        }
-                        
-                    },
-                    error: function () {
-                        let errmsg=document.getElementById('errors');
-                        let user=document.getElementById('uname');
-                        errmsg.innerText="There is no user with "+user.value+" ...";
-                        user.classList.add("shake");
-                        user.classList.add("bor");
-                        setTimeout(function() {
-                        user.classList.remove("shake");
-                        }, 500);
-                    }
-                });
-            });
-        });
+        <script>
         function clears(){
             let errmsg=document.getElementById('errors');
             let user=document.getElementById('uname');
@@ -115,7 +64,7 @@
 <body>
    
     <div class="container-lg p-4 mx-auto rounded-2 border-1 mt-5 " id="cont">
-        <b><i class="bi-box-arrow-left" onclick="signin()"></i></b>
+        <b><i class="bi-box-arrow-left" onclick="dash()"></i></b>
 
 
         <center><h2>Change password</h2></center><br>
@@ -127,7 +76,7 @@
             </div>
             <div>
                 <label for="uname" class="pt-3 fw-bold">User Name:</label>
-                <input type="text" id="uname" name="username" class="form-control" required>
+                <input type="text" id="uname" name="username" class="form-control" required readonly>
             </div>
            <div>
                 <label for="pwd" class="pt-3 fw-bold">old Password:</label>
@@ -141,7 +90,8 @@
                 <label for="cpwd" class="pt-3 fw-bold">Conform Password:</label>
                 <input type="password" id="cpwd" name="con_password" class="form-control" required>
             </div>
-            <p class="text-primary" onclick="tryotp()">try another way</p>
+            <br>
+            <!-- <p class="text-primary" onclick="tryotp()">try another way</p> -->
             <div onclick="clears()">
                 <center><button type="submit" class="center btn btn-primary rounded-1">Update password</button></center>
             </div>
@@ -150,4 +100,56 @@
     </div>
 
 </body>
+<script>
+            let tk=localStorage.getItem("user")
+            var userin = document.getElementById("uname");
+            if(tk == null){
+            }
+            else{
+
+                userin.value = tk 
+            }
+            function dash(){
+                window.location.href = '/dashboard';            
+                }
+
+
+
+
+</script>
+<script defer>
+        
+    var b = '{{error.changepwd}}'
+    let errmsg=document.getElementById('errors');
+    let user=document.getElementById('uname');
+    let old=document.getElementById('pwd');
+    let newp = document.getElementById('npwd');
+    let con=document.getElementById('cpwd');
+    setTimeout(function() {
+        errmsg.innerText="";
+        var dd=[user,old,newp,con]
+        dd.forEach(d => {
+          d.classList.remove("shake");
+          d.classList.remove("bor");
+        });
+    }, 4000);
+    if (b == "same"){
+      errmsg.innerText= "You are updating the same password..!";
+      newp.classList.add("shake");
+      newp.classList.add("bor");
+    }        
+    if (b == "newcon"){
+      errmsg.innerText= "Wrong new conform password..!";
+      con.classList.add("shake");
+      con.classList.add("bor");
+    }        
+    if (b == "incor"){
+      errmsg.innerText= "Wrong password..!";
+      old.classList.add("shake");
+      old.classList.add("bor");
+    }
+    if (b == "pwd"){
+      errmsg.innerText= "No user found..!";
+    }
+    </script>
 </html>

@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="icon" href="../static/images/user.png" type="image/x-icon">
+    <link rel="icon" href="../static/images/icon.jpg" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../static/css/dash3.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     
 
     <script defer>
         let a=0;
         let token_val='{{token}}';
+        var delbtn=document.getElementById('profile');
+        // delbtn.disabled = true;
+
         function storelocal(key,val){
             localStorage.setItem(key,val);
         }
@@ -32,21 +33,29 @@
             });
             const receivedata=await response.json();
             if (what==0){
+                console.log("inside 0")
                 if(receivedata['status']=="active"){
+                    console.log("inside active")
+
                     userdetails(receivedata);  
                 }
                 else{
                     window.location.href = '/signin';
                                 // changing 
-
                 }
-            }else{
+            }
+            else{
+                console.log("inside else")
+
                 if (what==1){
+                    console.log("inside 1")
                     userdetails(receivedata);
                 }
                 if(what==2){
+                    console.log("inside 2")
 
                 }
+
             }
             
         }
@@ -71,18 +80,20 @@
                         }
                 data=send_json(gettok,'/decode',0)
                 // changing 
-
-               
+  
             }
         }
         function userdetails(datadic){
             let usname=document.getElementById('username');
             let demail=document.getElementById('email');
+            let emailship=document.getElementById('emailship');
             const profil=document.getElementById('profile');
-            let refemail=document.getElementById('refuser').value=datadic.username;
+            let refemail=document.getElementById('refuser');
+            refemail.value=datadic.username;
             usname.innerText=datadic.username;
             demail.innerText=datadic.email;
-            profil.src=datadic.profile
+            emailship.value=datadic.email;
+            profil.src=datadic.profile;
             storelocal("user",datadic.username);
         }
         function devicedata(data=null){
@@ -99,27 +110,7 @@
                 }
             });
         }
-        function display(div_ids,but_id){
-            let divs=['dashboard','account','create_ship','my_ships','data','device_data'];
-            let buts=['dash','ac','cship','ship','data','device'];
-               for(let i=0;i<=divs.length;i++){
-                   if(divs[i]==div_ids){
-                       document.getElementById(div_ids).style.display="block";
-                       let ab=document.getElementById(but_id);
-                       ab.style.color="orangered";
-                       ab.style.backgroundColor="whitesmoke";
-                       ab.style.textShadow = '0px 2px 4px rgba(0, 0, 0, 0.5)';
-                   }
-                   else{
-                        var no=divs[i]
-                        var non=buts[i]
-                       document.getElementById(no).style.display="none";
-                       let ab=document.getElementById(non);
-                       ab.style.color="white";
-                       ab.style.backgroundColor="gray";
-                   }
-               }
-           }
+
         function logout(){
             localStorage.clear()
             window.location.href = "{{url_for('logout')}}"; 
@@ -144,18 +135,57 @@
                   const selectedFile = event.target.files[0];
                   myform.submit();
                 });
+                // delbtn.disabled = false;
         }
         function removeprofil(){
+            // delbtn.disabled = true;
+            var img=document.getElementById('profile');
             var user={
                 "user":getlocal("user")
-                }  
-            data=send_json(user,'/delpro',1)  
+                } 
+                data=send_json(user,'/delpro',1)  
+        
+            
             // changing 
             location.reload()
         }
+        function changepwd(){
+            window.location.href = '/forgetpwd';      
+        }
         
+        setTimeout(function() {
+            var secpara=document.getElementById('secondpara');
+            secpara.classList.remove('displaynone');
+        }, 15660);
+        // Function to simulate text typing effect
+function typeWriter(textElement, speed) {
+    const text = textElement.innerHTML;
+    textElement.innerHTML = '';
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      if (i < text.length) {
+        textElement.innerHTML += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, speed);
+  }
+ 
+  // Call the typing effect for the specific element with the desired speed
+  document.addEventListener('DOMContentLoaded', function () {
+    var textElement = document.querySelector('.typing-effect');
+    typeWriter(textElement, 20); 
+  });
    </script>
     <style>
+       
+        body {
+            background-image: url("../static/images/geometric-background-with-copy-space.jpg");
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+        }
         .content {
           display: none;
         }
@@ -235,7 +265,7 @@
             border-radius: 10px;
             display: none;
             box-shadow: -5px 5px 20px 0.5px orangered;
-            background-color: rgba(255, 255, 255, 0.548);
+            background-color: #ffffff8c;
         }
 /* -------------------------------------------------- */
         @keyframes splitTextAnimation {
@@ -351,9 +381,64 @@
             bottom: 5px;
             right: 10%;
         }
-        .dateTimeDisplay{
+        .displaynone{
+            display: none;
+        }
+
+        /* -------------------------------------- */
+        .containerdiv {
+            margin-bottom: 10px;
+            width: 90%;
+        }
+
+        .headdiv {
+            display: flex;
+            justify-content: space-between;
+            background-color:rgba(128, 128, 128, 0.836);
+            cursor: pointer;
+            padding-left: 10px;
+            padding-right: 15px;
+            border: 2px solid orangered;
+            border-radius: 5px;
+            height: 50px;
+        }
+        .headingship{
+            color: whitesmoke;
+            font-size: 16px;  
+            font-weight: bold;      
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.658);      
+            font-family: 'Trebuchet MS', sans-serif;
+            align-self: center;
+            margin-top: 20px;
+
 
         }
+        .bodydiv {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 2px solid orangered;
+            border-radius: 5px;
+            
+
+        }
+        #but{
+            width: 20px;
+            height: 20px;
+            align-self: center;
+        }
+
+        /* ----------------------------------------------------- */
+        .table td,.table th {
+                font-size: 16px; /* Adjust as needed */
+            }
+
+            /* Media query for mobile devices */
+            @media (max-width: 768px) { /* Adjust the breakpoint as needed */
+                .table td,
+                .table th {
+                    font-size: 11px; /* Decrease font size for mobile devices */
+                }
+            }
     </style>
     
 </head>
@@ -379,11 +464,11 @@
             <div class="collapse navbar-collapse border-0 w-100 mx-auto" id="collapsibleNavId">
                 <ul class="navbar-nav na" id="addtomobmen">
                     
-                    <li class="menu-item high nav-item hov" data-target="dashboard">Dashboard</li>
-                    <li class="menu-item high nav-item" data-target="account"><i class="bi-person-fill"></i> &nbsp;My Account</li>
-                    <li class="menu-item high nav-item" data-target="create_ship"><i class="bi-plus-circle"></i> &nbsp;Create Shipment</li>
-                    <li class="menu-item high nav-item" data-target="my_ships">My Shipments</li>
-                    <li class="menu-item high nav-item" data-target="device_data" id="devbtn">Device Data</li>
+                    <li class="menu-item high nav-item hov " data-target="dashboard">Dashboard</li>
+                    <li class="menu-item high nav-item " data-target="account"><i class="bi-person-fill"></i> &nbsp;My Account</li>
+                    <li class="menu-item high nav-item " data-target="create_ship"><i class="bi-plus-circle"></i> &nbsp;Create Shipment</li>
+                    <li class="menu-item high nav-item " data-target="my_ships">My Shipments</li>
+                    <li class="menu-item high nav-item " data-target="device_data" id="devbtn">Device Data</li>
                     <li class="high" id="logbt" onclick="logbtn(0)"><i class="bi-box-arrow-right"></i> &nbsp;logout</li>
                 
                 </ul>
@@ -419,11 +504,12 @@
         <div class="col-md-9 w-100 mx-auto p-4 d-block justify-content-center">
             <div id="dashboard" class="content active ">
                 <center><img src="../static/images/scm.jpeg" alt="scm" width="500px" height="300px" class="img-fluid" ></center>
-            <center> <p class="animated-paragraph">Supply chain management (SCM) is the process of managing the flow of goods and services to and from a business, including every 
+            <center> <p class="a typing-effect">Supply chain management (SCM) is the process of managing the flow of goods and services to and from a business, including every 
                 step involved in turning raw materials and components into final products and getting them to the ultimate customer. Effective
-                SCM can help streamline a company's activities to eliminate waste, maximize customer value, and gain a competitive advantage in the marketplace.</br>
+                SCM can help streamline a company's activities to eliminate waste, maximize customer value, and gain a competitive advantage in the marketplace. 
                 Supply chain management (SCM) is the centralized management of the flow of goods and services to and from a company and includes all of the processes involved in transforming raw materials and components into final products.
-                By managing the supply chain, companies can cut excess costs and deliver products to the consumer faster and more efficiently.</br>
+                By managing the supply chain, companies can cut excess costs and deliver products to the consumer faster and more efficiently. </p>
+                <p id="secondpara" class="displaynone">
                 <img src="../static/images/datast.png" alt=" data stream" width="500px" height="250px" class="img-fluid"><br>
                 Some real-life examples of streaming data include use cases in every industry, including real-time stock trades, up-to-the-minute retail inventory management, social media feeds, multiplayer games, and ride-sharing apps</br>
                 Streaming data is data that is continuously generated by different sources. Such data should be processed incrementally using stream processing techniques without having access to all of the data. In addition, it should 
@@ -445,6 +531,7 @@
                             <h5 class="h5-responsive" id="username"></h5><br>
                             <u>Email:</u>
                             <h5 class="h5-responsive" id="email"></h5>
+                            <u style="color: blue; font-size: smaller;" onclick="changepwd()">Change password</u>
                         </div>
                     </div>
                 </div>
@@ -455,6 +542,7 @@
                         <input type="text" name="user" id="refuser" style="display: none;">
                     </form>
                 </div>
+
             </div>
             <div id="create_ship" class="content custom-gradient-bg">
                 <center>
@@ -466,6 +554,7 @@
                     <fieldset>
                         <div class="container d-flex justify-content-around flex-lg-nowrap flex-md-nowrap flex-wrap">
                             <div class="container form-control bg-transparent custom-gradient-bg">
+                                <input type="email" id="emailship" name="emailship" class="form-control" style="display: none;">
                                     <div class="mb-3">
                                         <label for="s_no" class="form-label">Shipment Number*</label>
                                         <input type="text" id="s_no" class="form-control" name="ship_no" placeholder="Shipment Number" required>
@@ -551,53 +640,29 @@
                     </div>
                 </center>
             <div class="container">
-                <div class="table-responsive">
-                <table
-                    class="table table-striped table-hover table-borderless table-primary align-middle"
-                >
-                    <thead class="table-light border border-2">
-                        <tr>
-                            <th>Shipment Number</th>
-                            <th>Route details</th>
-                            <th>Device</th>
-                            <th>Po no</th>
-                            <th>NDC no</th>
-                            <th>serial no</th>
-                            <th>container.no</th>
-                            <th>goods type</th>
-                            <th>expected date</th>
-                            <th>delivery no</th>
-                            <th>batch id</th>
-                            <th>description</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        {% for i in dis %}
-                        <tr class="table-primary">
-                            <td>{{i['ship_no']}}</td>
-                            <td>{{i['route']}}</td>
-                            <td>{{i['device']}}</td>
-                            <td>{{i['po_no']}}</td>
-                            <td>{{i['ndc_no']}}</td>
-                            <td>{{i['serial_no']}}</td>
-                            <td>{{i['con_no']}}</td>
-                            <td>{{i['goods_type']}}</td>
-                            <td>{{i['ex_date']}}</td>
-                            <td>{{i['del_no']}}</td>
-                            <td>{{i['batch_id']}}</td>
-                            <td>{{i['desc']}}</td>
-                        </tr>
-                        {% endfor %}
-        
-                    </tbody>
-                    <tfoot>
-                        
-                    </tfoot>
-                </table>
-        
-                </div>
+                {% for i in dis %}
+                <div class="containerdiv">
+                    <div class="headdiv">
+                      <p class="headingship">Shipment no :{{i['ship_no']}}</p>
+                      <i class="bi-caret-down-fill" id="but" onclick="toggleBody(this)"></i>
+                    </div>
+                    <div class="bodydiv" style="display: none;">
+                            <span><b>Route details :</b> {{i['route']}}</span>
+                        <br><span><b>Devices :</b> {{i['device']}}</span>
+                        <br><span><b>Po no :</b> {{i['po_no']}}</span>
+                        <br><span><b>NDC no :</b> {{i['ndc_no']}}</span>
+                        <br><span><b>Serial no :</b> {{i['serial_no']}}</span>
+                        <br><span><b>Container.no :</b> {{i['con_no']}}</span>
+                        <br><span><b>Goods type :</b> {{i['goods_type']}}</span>
+                        <br><span><b>Expected date :</b> {{i['ex_date']}}</span>
+                        <br><span><b>Delivery no :</b> {{i['del_no']}}</span>
+                        <br><span><b>Batch id :</b> {{i['batch_id']}}</span>
+                        <br><span><b>Description :</b> {{i['desc']}}</span>
+                    </div>
+                  </div>
+                {% endfor %}
+
                 
-        
             </div>
             </div>
             
@@ -617,17 +682,19 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    
-                    <table
-                        class="table table-primary"
-                    >
+                    <table class="table table-primary table-responsive-sm"> <!-- Add the responsive table class -->
                         <thead>
                             <tr>
-                                
                                 <th scope="col">S.no</th>
                                 <th scope="col">Device_ID</th>
-                                <th scope="col">Battery_Level</th>
-                                <th scope="col">Sensor_temp</th>
+                                <th scope="col">
+                                    <div class="d-none d-sm-block">Battery_Level</div> <!-- Hide on xs devices -->
+                                    <div class="d-sm-none">Bat</div> <!-- Visible only on xs devices -->
+                                </th>
+                                <th scope="col">
+                                    <div class="d-none d-sm-block">Sensor_temp</div> <!-- Hide on xs devices -->
+                                    <div class="d-sm-none">Temp</div> <!-- Visible only on xs devices -->
+                                </th>
                                 <th scope="col">Route_From</th>
                                 <th scope="col">Route_To</th>
                             </tr>
@@ -637,16 +704,16 @@
                             <tr class="" id="ttr">
                                 <td scope="row">{{key}}</td>
                                 <td class="nn">{{value['Device_ID']}}</td>
-                                <td>{{value['Battery_Level']}}</td>
-                                <td>{{value['First_Sensor_temperature']}}</td>
+                                <td class="d-none d-sm-table-cell">{{value['Battery_Level']}}</td> <!-- Hide on xs devices -->
+                                <td class="d-none d-sm-table-cell">{{value['First_Sensor_temperature']}}</td> <!-- Hide on xs devices -->
+                                <td class="d-sm-none">{{value['Battery_Level']}}</td> <!-- Visible only on xs devices -->
+                                <td class="d-sm-none">{{value['First_Sensor_temperature']}}</td> <!-- Visible only on xs devices -->
                                 <td>{{value['Route_From']}}</td>
                                 <td>{{value['Route_To']}}</td>
                             </tr>
-                            
                             {% endfor %}
-                           
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
                 
             </div>
@@ -664,7 +731,7 @@
             <button class="btn btn-success fw-bolder w-25" onclick="logbtn(1)">No</button>
         </div>
     </div>
-    <div class="cont">
+    <div class="cont bg-transparent">
         <h6 id="dateTimeDisplay"></h6>
     </div>
 
@@ -680,6 +747,27 @@
     var minutes = currentDate.getMinutes();
     var seconds = currentDate.getSeconds();
     h.textContent =day + "-" + month + "-" + year;
+
+</script>
+<script>
+    function toggleBody(button) {
+    var butt=document.getElementById('but');
+  var container = button.parentElement.parentElement; // Get the parent container
+  var body = container.querySelector('.bodydiv'); // Get the body div inside the container
+
+  // Toggle the display property of the body div
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    button.classList.add('bi-caret-up-fill')
+    button.classList.remove('bi-caret-down-fill')
+
+  } else {
+    body.style.display = 'none';
+    button.classList.add('bi-caret-down-fill')
+    button.classList.remove('bi-caret-up-fill')
+  }
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>

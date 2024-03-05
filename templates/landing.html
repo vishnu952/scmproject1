@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supply chain management</title>
+  <link rel="icon" href="../static/images/icon.jpg" type="image/x-icon">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{
+        overflow: hidden;
+    }
+    .centered-div {
+      text-align: center; 
+      margin-top: 150px; 
+    }
+    .heading1,.heading2{
+            font-weight: bolder;
+            font-variant: small-caps;
+            font-family: algerian;
+        }
+        .heading1{
+            font-size: 150px;
+        }
+        .heading2{
+            font-style: oblique;
+            font-size:35px;
+        }
+        .all{
+            z-index: -2;
+            position: absolute;
+            border: 2px solid rgb(252, 0, 0);
+            border-radius: 70%;
+            filter: blur(10px);
+
+       }
+       .circles1,.circles2,.circles3,.circles4,.circles5,.circles6,.circles7{
+
+            animation: resizeAnimation 4s ease-in-out infinite alternate;
+
+       }
+       @keyframes resizeAnimation {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+
+       .circles1{
+            z-index: -2;
+            width: 700px;
+            height: 700px;
+            left: 450px;
+            top: 350px;
+            background-color: #eb3e3e6e;
+        }        
+        .circles2{
+            z-index: -2;
+            width: 700px;
+            height: 700px;
+            left: -200px;
+            top: -250px;
+            background-color: #3ed7eb6e;
+        }       
+        .circles3{
+            z-index: -2;
+            width: 400px;
+            height: 400px;
+            left: 870px;
+            top: -100px;
+            background-color: #61eb3e6e;
+        }
+        .circles4{
+            z-index: -2;
+            width: 200px;
+            height: 200px;
+            left: 600px;
+            top: 150px;
+            background-color: #d9ff00b7;
+        }
+        .circles5{
+            z-index: -2;
+            width: 500px;
+            height: 500px;
+            left: -70px;
+            top: 500px;
+            background-color: #eb3e9d;
+        }
+        .circles6{
+            z-index: -2;
+            width: 600px;
+            height: 600px;
+            left: 1170px;
+            top: 200px;  
+            background-color: #00ff6a;
+        }
+        .btns{
+            position: relative;
+            top: 150px;
+            /* right: 100px; */
+            left: 0;
+            position: relative;
+            animation: moveRightBottom 4s forwards;
+        }
+        @keyframes moveRightBottom {
+            0% {
+                left: 0;
+            }
+            100% {
+                left: calc(70% - 100px);
+            }
+        }
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 600;
+  margin: 0 10px;
+  width: 200px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+.button1 {
+    color: white;
+  border: 1.5px solid  #00ff6a;
+  background-color:  #00ff6a;
+
+
+}
+
+.button2 {
+    color: white;
+  border: 1.5px solid #eb3e3e6e;
+  background-color: #eb3e3e6e;
+
+}
+
+.button1:hover {
+  color: white;
+  /* width:; */
+  box-shadow: 0 0 25px white;
+  background-color: #eb3e3e6e;
+}.button2:hover {
+  color: white;
+  /* width:; */
+  box-shadow: 0 0 25px white;
+  background-color:  #00ff6a;
+}
+.para{
+    margin-left: 100px;
+    margin-top: 30px;
+    width: 50%;
+    height: fit-content;
+    font-family: Verdana;
+    font-weight: 600;
+}
+  </style>
+</head>
+<body>
+    <div class="position-absolute circles">
+        <div class="circles1 all"></div>
+        <div class="circles2 all"></div>
+        <div class="circles3 all"></div>               
+        <div class="circles4 all"></div>
+        <div class="circles5 all"></div>
+        <div class="circles6 all"></div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="centered-div">
+                    <h1 class="heading1">SCM</h1>
+                    <h2 class="heading2 typing-effect">Supply Chain Management System</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex  btns">
+        <div>
+            <button class="button1 z-0" onclick="signup()"><b>Signup</b></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="button2 z-0" onclick="login()"><b>Login</b></button>
+        </div>
+    </div>
+    <div class="para">
+        <p class="paratype" >
+            Optimizes the flow of goods and services from raw materials to end consumers, 
+            ensuring efficiency, cost-effectiveness, and customer satisfaction through 
+            coordinated planning, execution, and monitoring.
+        </p>
+    </div>
+</body>
+<script>
+    function login(){
+        window.location.href = "/signin";
+    }
+    function signup(){
+        window.location.href = "/signup";
+    }
+
+// Function to simulate text typing effect
+function typeWriter(textElement, speed) {
+    const text = textElement.innerHTML;
+    textElement.innerHTML = '';
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      if (i < text.length) {
+        textElement.innerHTML += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, speed);
+  }
+ 
+  // Call the typing effect for the specific element with the desired speed
+  document.addEventListener('DOMContentLoaded', function () {
+    var textElement = document.querySelector('.typing-effect');
+    typeWriter(textElement, 100); // Adjust the speed (in milliseconds) as needed
+  }); 
+  document.addEventListener('DOMContentLoaded', function () {
+    var textElement = document.querySelector('.paratype');
+    typeWriter(textElement, 50); // Adjust the speed (in milliseconds) as needed
+  });  
+//    document.addEventListener('DOMContentLoaded', function () {
+//     var textElement = document.querySelector('.circles');
+//     typeWriter(textElement, 50); // Adjust the speed (in milliseconds) as needed
+//   });
+
+</script>
+
+</html>

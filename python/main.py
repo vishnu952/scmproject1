@@ -55,8 +55,9 @@ app.mount("/static",StaticFiles(directory="static"),name="static")
 # the below code load a landing web page
 @app.get("/",response_class=HTMLResponse)
 async def index(request:Request):
-    errors["signup"]=" "
-    return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":None})
+    return template.TemplateResponse("landing.html",{"request":request})
+    # errors["signup"]=" "
+    # return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":None})
 
 # the below code load a signup web page
 @app.get("/signup",response_class=HTMLResponse)
@@ -89,7 +90,9 @@ async def signuptodb(request:Request,username:str = Form() ,email:str=Form(), pa
             if is_correct:
                 if Captcha==ckcap:
                     col.insert_one(userdata)
-                    return signin_fun(username,request)
+                    request.session['user'] = username
+                    return RedirectResponse(url=f"/dashboard", status_code=307)
+                    # return signin_fun(username,request)
                 else:
                     errors['signup']="cap"
                     return template.TemplateResponse("signup.html",{"request":request,"error":errors,"dat":d})
@@ -114,7 +117,6 @@ async def signinpage(request:Request):
 # then it return to website with session id
 @app.post("/signintodb")
 def signintodb(request:Request,username:str=Form(),password:str=Form()):
-    # return{"msg":username}
     user={"username":username}
     dbuser=col.find_one(user)
     if dbuser==None:
@@ -131,9 +133,10 @@ def signintodb(request:Request,username:str=Form(),password:str=Form()):
 
 
 # the below code load the forgetpwd.html  when forgetpwd endpoint get in url 
-@app.get("/forgetpwd",response_class=HTMLResponse)
+@app.get("/forgetpwd")
 async def signinpage(request:Request):
-    return template.TemplateResponse("forgetpwd.html",{"request":request})
+    errors['changepwd']=" "
+    return template.TemplateResponse("forgetpwd.html",{"request":request,"error":errors})
 
 # the below code load a updatepwdcon when updatepwdcon endpoint get in url ***
 @app.post("/updatepwdcon") # $
@@ -147,14 +150,24 @@ async def updatepwdcon(request:Request,username:str=Form(),old_password:str=Form
     is_correct = pwd_context.verify(old_password, dbuser["password"])
     if is_correct:
         if old_password==new_password:
-            return{"msg":"same"}
+            # return{"msg":"same"}
+            errors['changepwd']="same"
+            return template.TemplateResponse("forgetpwd.html",{"request":request,"error":errors})
+
         else:
             if new_password==con_password:
                 col.update_one(o_user,n_user)
-                return{"msg":"success"}
+                return signin_fun(username,request)
             else:
-                return{"msg":"newcon"}
-    return{"msg":"incor"}
+                errors['changepwd']="newcon"
+                return template.TemplateResponse("forgetpwd.html",{"request":request,"error":errors})
+
+                # return{"msg":"newcon"}
+    errors['changepwd']="incor"
+    return template.TemplateResponse("forgetpwd.html",{"request":request,"error":errors})
+
+    # return{"msg":"incor"}
+
 
 # the below code load a otp.html web page when passwordotp endpoint get in url 
 @app.get("/passwordotp",response_class=HTMLResponse)
@@ -211,7 +224,7 @@ async def checkotp(request:Request,emaill:str=Form(),otp:str=Form(),newpwd:str=F
 
 @app.post("/decode")
 async def decode(request:Request,getted_token:dict):
-    checked=check_token(getted_token['toke'])
+    checked=check_token(getted_token["toke"])
     user=checked["username"]
     data=col.find_one({"username":user},{"_id":0})
     try:
@@ -225,8 +238,10 @@ async def decode(request:Request,getted_token:dict):
 async def logout(request:Request): 
     user = request.session.get('user')
     col.update_one({"username":user},{"$set":{"status":"inactive"}})
-    errors['signin']=" "
-    return template.TemplateResponse("signin.html",{"request":request,"error":errors})
+    return template.TemplateResponse("landing.html",{"request":request})
+
+    # errors['signin']=" "
+    # return template.TemplateResponse("signin.html",{"request":request,"error":errors})
 
 @app.get("/logstatus")
 async def logstat(request:Request):
@@ -238,19 +253,26 @@ async def logstat(request:Request):
 async def imatodb(request: Request, profile: UploadFile = File(), user: str = Form()):
     if profile.filename:
         filenae=user+profile.filename
+        already=os.path.join("static/images/",profile.filename )
         path = os.path.join("static/images/",filenae )
         udata=col.find_one({"username":user})
-        if path==udata['profile']:
-            pass
+        if already==udata['profile'] or path==udata['profile']:
+            a=a
         else:
             with open(path, "wb") as f:
                 shutil.copyfileobj(profile.file, f)
             col.update_one({"username": user}, {"$set": {"profile": path}})
         request.session['user'] = user
         return RedirectResponse(url=f"/dashboard", status_code=307)
+@app.get("/dashboard")
+def backlogin(request: Request):
+    user = request.session.get('user')
+    if not user:
+        return {"message": "User parameter not found in query params"}
+    return signin_fun(user, request)
 
 @app.post("/dashboard")
-async def da(request:Request):
+async def dashboard(request:Request):
     user = request.session.get('user')
     if not user:
         return {"message": "User parameter not found in query params"}
@@ -261,18 +283,20 @@ async def process_data(user: dict):
     user_data = col.find_one({"username": user['user']}, {"_id": 0})
     path=user_data['profile']
     if user_data["profile"] == "static/images/user.png":
+        print("this oneeee")
         return None
     else:
         if os.path.exists(user_data['profile']):
             os.remove(user_data['profile'])
         col.update_one(
             {"username": user['user']},
-            {"$set": {"profile": "static/images/user.png"}}
+            {"$set": {"profile" : "static/images/user.png"}}
         )
-        return {"message": "Profile image deleted successfully and reset to default."}
+        return user_data
 
 @app.post("/shipdetails")
 async def shipdetails(request   :Request,
+                      emailship :str=Form(),
                       ship_no   :str=Form(),
                       route     :str=Form(),
                       device    :str=Form(),
@@ -287,6 +311,7 @@ async def shipdetails(request   :Request,
                       desc      :str=Form()
                       ):
     data={
+        "email"         :emailship,
         "ship_no"       :ship_no,
         "route"         :route,
         "device"        :device,
@@ -302,7 +327,7 @@ async def shipdetails(request   :Request,
         }
     
     user = request.session.get('user')
-    userd=user+"data"
+    userd="shipment_data"
     usercol=db[userd]
     d=usercol.find_one({"ship_no":ship_no},{"_id":0})
     if d:
@@ -318,13 +343,14 @@ def signin_fun(username,request,dis=None):
     status=col.find_one({"username":username})
     data={}
     if status["status"]=="inactive":
-        return template.TemplateResponse("signin.html",{"request":request})
+        errors['signin']=" "
+        return template.TemplateResponse("signin.html",{"request":request,"error":errors})
     else:
         if username is not None:
             token=create_token(username)
-            u=username+"data"
+            u="shipment_data"
             usercol=db[u]
-            redata=usercol.find()
+            redata=usercol.find({"email":status["email"]})
             Isadmin=False
             if username=="ADMIN":
                 decol=db['devicedata']
@@ -342,6 +368,7 @@ def create_token(username):
     entoken = jwt.encode(user_payload, SECRET, ALGORITHM)
     if entoken:
         return entoken
+    
 # capgen method generates and return captcha also assigning to capg global variable
 def capgen(a=0):
     global capg
